@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'character_species.dart';
 import 'character_status.dart';
 
-/// Representa un personaje de rick and morty en la capa de dominio, con los
-/// datos ya normalizados (independiente del formato JSON de la API)
+/// Representa un personaje de rick and morty, con los datos ya normalizados
+/// (independiente del formato JSON de la API)
 class RmCharacterEntity extends Equatable {
   final int id;
   final String name;
@@ -27,14 +27,5 @@ class RmCharacterEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-    id,
-    name,
-    status,
-    species,
-    gender,
-    origin,
-    location,
-    image,
-  ];
+  List<Object?> get props => [id, name, status, species, gender, origin, location, image];
 }

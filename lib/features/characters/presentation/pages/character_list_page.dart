@@ -3,19 +3,19 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/core.dart';
 import '../../domain/domain.dart';
 import '../providers/characters_notifier.dart';
 import 'character_detail_page.dart';
 
-class RmCharactersListPage extends ConsumerStatefulWidget {
-  const RmCharactersListPage({super.key});
+final class RmCharacterListPage extends ConsumerStatefulWidget {
+  const RmCharacterListPage({super.key});
 
   @override
-  ConsumerState<RmCharactersListPage> createState() =>
-      _RmCharactersListPageState();
+  ConsumerState<RmCharacterListPage> createState() => _RmCharacterListPageState();
 }
 
-class _RmCharactersListPageState extends ConsumerState<RmCharactersListPage> {
+final class _RmCharacterListPageState extends ConsumerState<RmCharacterListPage> {
   static const _loadMoreThreshold = 300.0;
 
   final _searchController = TextEditingController();
@@ -66,20 +66,19 @@ class _RmCharactersListPageState extends ConsumerState<RmCharactersListPage> {
               controller: _searchController,
               onChanged: _onSearchChanged,
               decoration: const InputDecoration(
-                hintText: 'Buscar personaje por nombre',
+                hintText: 'Search character by name',
                 prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(24))),
               ),
             ),
           ),
           Expanded(
             child: charactersAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) =>
-                  _RmCharactersErrorView(message: error.toString()),
+              error: (error, _) => _RmCharactersErrorView(message: error.toString()),
               data: (state) => state.characters.isEmpty
                   ? const _RmCharactersEmptyView()
-                  : _RmCharactersListView(
+                  : _RmCharacterListView(
                       characters: state.characters,
                       isLoadingMore: state.isLoadingMore,
                       scrollController: _scrollController,
@@ -92,8 +91,8 @@ class _RmCharactersListPageState extends ConsumerState<RmCharactersListPage> {
   }
 }
 
-class _RmCharactersListView extends StatelessWidget {
-  const _RmCharactersListView({
+final class _RmCharacterListView extends StatelessWidget {
+  const _RmCharacterListView({
     required this.characters,
     required this.isLoadingMore,
     required this.scrollController,
@@ -121,19 +120,14 @@ class _RmCharactersListView extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: ListTile(
             contentPadding: const EdgeInsets.all(8),
-            leading: CircleAvatar(
-              radius: 28,
-              backgroundImage: NetworkImage(character.image),
-            ),
+            leading: CircleAvatar(radius: 28, backgroundImage: NetworkImage(character.image)),
             title: Text(character.name),
             subtitle: Text(
-              '${character.status.name} · ${character.species.name}',
+              '${rmCapitalize(character.status.name)} · '
+              '${rmCapitalize(character.species.name)}',
             ),
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) =>
-                    RmCharacterDetailPage(characterId: character.id),
-              ),
+              MaterialPageRoute(builder: (_) => RmCharacterDetailPage(characterId: character.id)),
             ),
           ),
         );
@@ -142,16 +136,16 @@ class _RmCharactersListView extends StatelessWidget {
   }
 }
 
-class _RmCharactersEmptyView extends StatelessWidget {
+final class _RmCharactersEmptyView extends StatelessWidget {
   const _RmCharactersEmptyView();
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('No se encontraron personajes'));
+    return const Center(child: Text('No characters found'));
   }
 }
 
-class _RmCharactersErrorView extends StatelessWidget {
+final class _RmCharactersErrorView extends StatelessWidget {
   const _RmCharactersErrorView({required this.message});
 
   final String message;
@@ -167,7 +161,7 @@ class _RmCharactersErrorView extends StatelessWidget {
           Consumer(
             builder: (context, ref, _) => FilledButton(
               onPressed: () => ref.invalidate(charactersNotifierProvider),
-              child: const Text('Reintentar'),
+              child: const Text('Retry'),
             ),
           ),
         ],

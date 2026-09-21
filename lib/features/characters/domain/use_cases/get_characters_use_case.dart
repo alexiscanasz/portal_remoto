@@ -4,11 +4,11 @@ import '../repositories/characters_repository.dart';
 
 /// Obtiene un listado de personajes, filtrando opcionalmente por [name] e inicialmente
 /// consultando la primera pagina a menos que se indique la pagina a solicitar
-class RmGetCharactersUseCase {
-  final RmCharactersRepository repository;
+final class RmGetCharactersUseCase {
+  RmGetCharactersUseCase({required RmCharactersRepository repository}) : _repository = repository;
 
-  RmGetCharactersUseCase({required this.repository});
+  final RmCharactersRepository _repository;
 
   Future<RmResult<RmCharactersPage>> call({String? name, int page = 1}) =>
-      repository.getAll(name: name, page: page);
+      _repository.getAll(name: name, page: page);
 }

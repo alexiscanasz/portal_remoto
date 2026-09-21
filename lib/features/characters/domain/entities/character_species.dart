@@ -1,7 +1,4 @@
-/// Especie de un personaje, segun los valores usados por la api de rick and
-/// morty (`Human`, `Alien`, `Humanoid`, `Poopybutthole`,
-/// `Mythological Creature`, `Animal`, `Robot`, `Cronenberg`, `Disease`,
-/// `Unknown`)
+/// Especie de un personaje, segun los valores usados por la api de rick and morty
 enum RmCharacterSpecies {
   human,
   alien,

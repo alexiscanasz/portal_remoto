@@ -5,18 +5,19 @@ import '../../domain/domain.dart';
 import 'characters_dependency_providers.dart';
 import 'characters_exception.dart';
 
-class RmSearchQueryNotifier extends Notifier<String> {
+final class RmSearchQueryNotifier extends Notifier<String> {
   @override
   String build() => '';
 
   void update(String value) => state = value;
 }
 
-final characterSearchQueryProvider =
-    NotifierProvider<RmSearchQueryNotifier, String>(RmSearchQueryNotifier.new);
+final characterSearchQueryProvider = NotifierProvider<RmSearchQueryNotifier, String>(
+  RmSearchQueryNotifier.new,
+);
 
-class RmCharactersListState {
-  const RmCharactersListState({
+final class RmCharacterListState {
+  const RmCharacterListState({
     required this.characters,
     required this.hasMore,
     this.isLoadingMore = false,
@@ -26,12 +27,12 @@ class RmCharactersListState {
   final bool hasMore;
   final bool isLoadingMore;
 
-  RmCharactersListState copyWith({
+  RmCharacterListState copyWith({
     List<RmCharacterEntity>? characters,
     bool? hasMore,
     bool? isLoadingMore,
   }) {
-    return RmCharactersListState(
+    return RmCharacterListState(
       characters: characters ?? this.characters,
       hasMore: hasMore ?? this.hasMore,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
@@ -39,7 +40,7 @@ class RmCharactersListState {
   }
 }
 
-class RmCharactersNotifier extends AsyncNotifier<RmCharactersListState> {
+final class RmCharactersNotifier extends AsyncNotifier<RmCharacterListState> {
   int _page = 1;
 
   Future<RmCharactersPage> _fetchPage(String name, int pageNumber) async {
@@ -54,14 +55,11 @@ class RmCharactersNotifier extends AsyncNotifier<RmCharactersListState> {
   }
 
   @override
-  Future<RmCharactersListState> build() async {
+  Future<RmCharacterListState> build() async {
     _page = 1;
     final name = ref.watch(characterSearchQueryProvider);
     final page = await _fetchPage(name, _page);
-    return RmCharactersListState(
-      characters: page.characters,
-      hasMore: page.hasNext,
-    );
+    return RmCharacterListState(characters: page.characters, hasMore: page.hasNext);
   }
 
   Future<void> loadMore() async {
@@ -74,7 +72,7 @@ class RmCharactersNotifier extends AsyncNotifier<RmCharactersListState> {
       final page = await _fetchPage(name, _page + 1);
       _page += 1;
       state = AsyncData(
-        RmCharactersListState(
+        RmCharacterListState(
           characters: [...current.characters, ...page.characters],
           hasMore: page.hasNext,
         ),
@@ -86,14 +84,9 @@ class RmCharactersNotifier extends AsyncNotifier<RmCharactersListState> {
 }
 
 final charactersNotifierProvider =
-    AsyncNotifierProvider<RmCharactersNotifier, RmCharactersListState>(
-      RmCharactersNotifier.new,
-    );
+    AsyncNotifierProvider<RmCharactersNotifier, RmCharacterListState>(RmCharactersNotifier.new);
 
-final characterDetailProvider = FutureProvider.family<RmCharacterEntity, int>((
-  ref,
-  id,
-) async {
+final characterDetailProvider = FutureProvider.family<RmCharacterEntity, int>((ref, id) async {
   final result = await ref.watch(getCharacterDetailUseCaseProvider).call(id);
 
   return switch (result) {

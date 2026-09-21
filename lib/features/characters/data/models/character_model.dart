@@ -1,6 +1,6 @@
 import '../../domain/domain.dart';
 
-class RmCharacterModel extends RmCharacterEntity {
+final class RmCharacterModel extends RmCharacterEntity {
   static const _idKey = 'id';
   static const _nameKey = 'name';
   static const _statusKey = 'status';
@@ -52,21 +52,13 @@ class RmCharacterModel extends RmCharacterEntity {
         status: _parseStatus(json[_statusKey] as String?),
         species: _parseSpecies(json[_speciesKey] as String?),
         gender: json[_genderKey] as String,
-        origin:
-            (json[_originKey] as Map<String, dynamic>?)?[_nameKey] as String? ??
-            '',
-        location:
-            (json[_locationKey] as Map<String, dynamic>?)?[_nameKey]
-                as String? ??
-            '',
+        origin: (json[_originKey] as Map<String, dynamic>?)?[_nameKey] as String? ?? '',
+        location: (json[_locationKey] as Map<String, dynamic>?)?[_nameKey] as String? ?? '',
         image: json[_imageKey] as String,
       );
 
   static List<RmCharacterModel> listFromJson(Map<String, dynamic> json) =>
       ((json[_resultsKey] as List?) ?? const [])
-          .map(
-            (character) =>
-                RmCharacterModel.fromJson(character as Map<String, dynamic>),
-          )
+          .map((character) => RmCharacterModel.fromJson(character as Map<String, dynamic>))
           .toList();
 }

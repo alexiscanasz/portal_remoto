@@ -2,8 +2,7 @@ import '../../../../core/core.dart';
 import '../entities/character_entity.dart';
 import '../entities/characters_page.dart';
 
-/// Punto de acceso del dominio a los datos de personajes, sin exponer
-/// detalles de la fuente (API remota, cache, etc.) a las capas superiores
+/// Punto de acceso del dominio a los datos de personajes
 abstract interface class RmCharactersRepository {
   /// Obtiene un listado de personajes, filtrando opcionalmente por [name] e inicialmente
   /// consultando la primera pagina a menos que se indique la pagina a solicitar
