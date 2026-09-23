@@ -1,4 +1,4 @@
-# Portal Remoto — Fase 2
+# portal_remoto
 
 App Flutter de la Fase 2 de la ruta de crecimiento, consume la [API de Rick and Morty](https://rickandmortyapi.com/) para listar, buscar y ver el detalle de personajes.
 
