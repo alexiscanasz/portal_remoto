@@ -1,58 +1,31 @@
-import '../../../../core/error/result.dart';
-import '../../domain/entities/character_entity.dart';
-import '../../domain/repositories/characters_repository.dart';
-import '../datasources/character_local_datasource.dart';
+import '../../../../core/core.dart';
+import '../../domain/domain.dart';
 import '../datasources/character_remote_datasource.dart';
-import '../models/character_model.dart';
 
-class CharactersRepositoryImpl implements CharactersRepository {
-  final CharacterRemoteDatasource characterRemoteDatasource;
-  final CharacterLocalDatasource characterLocalDatasource;
+/// Implementacion de [RmCharactersRepository] que obtiene los datos de la api
+/// de rick and morty y traduce los errores de red a un [RmFailure]
+final class RmCharactersRepositoryImpl implements RmCharactersRepository {
+  RmCharactersRepositoryImpl({required this.characterRemoteDatasource});
 
-  CharactersRepositoryImpl({
-    required this.characterRemoteDatasource,
-    required this.characterLocalDatasource,
-  });
+  final RmCharacterRemoteDatasource characterRemoteDatasource;
 
   @override
-  Future<Result<List<Character>>> getCharacters() async {
+  Future<RmResult<RmCharactersPage>> getAll({String? name, int page = 1}) async {
     try {
-      final characters = await characterRemoteDatasource.getCharacters();
-      return Success(characters);
+      final result = await characterRemoteDatasource.getAll(name: name, page: page);
+      return RmSuccess(result);
     } catch (_) {
-      return const Failure('No se pudieron cargar los personajes');
+      return const RmFailure('Could not load characters');
     }
   }
 
   @override
-  Future<Result<Character>> getCharacterDetail(int id) async {
+  Future<RmResult<RmCharacterEntity>> getById(int id) async {
     try {
-      final character = await characterRemoteDatasource.getCharacterDetail(id);
-      return Success(character);
+      final character = await characterRemoteDatasource.getById(id);
+      return RmSuccess(character);
     } catch (_) {
-      return const Failure('No se pudo cargar el personaje');
-    }
-  }
-
-  @override
-  Future<Result<bool>> addCharacterToFavorite(Character character) async {
-    try {
-      final added = await characterLocalDatasource.addCharacterToFavorite(
-        CharacterModel.fromEntity(character),
-      );
-      return Success(added);
-    } catch (_) {
-      return const Failure('No se pudo agregar el personaje a favoritos');
-    }
-  }
-
-  @override
-  Future<Result<List<Character>>> getFavoriteCharacters() async {
-    try {
-      final characters = await characterLocalDatasource.getFavoriteCharacters();
-      return Success(characters);
-    } catch (_) {
-      return const Failure('No se pudieron cargar los favoritos');
+      return const RmFailure('Could not load character');
     }
   }
 }

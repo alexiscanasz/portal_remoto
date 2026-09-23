@@ -1,12 +1,14 @@
-import 'package:portal_remoto_rick_and_morty_fase_2_ca_bloc/features/characters/domain/repositories/characters_repository.dart';
+import '../../../../core/core.dart';
+import '../entities/characters_page.dart';
+import '../repositories/characters_repository.dart';
 
-import '../../../../core/error/result.dart';
-import '../entities/character_entity.dart';
+/// Obtiene un listado de personajes, filtrando opcionalmente por [name] e inicialmente
+/// consultando la primera pagina a menos que se indique la pagina a solicitar
+final class RmGetCharactersUseCase {
+  RmGetCharactersUseCase({required RmCharactersRepository repository}) : _repository = repository;
 
-class GetCharactersUseCase {
-  final CharactersRepository repository;
+  final RmCharactersRepository _repository;
 
-  GetCharactersUseCase({required this.repository});
-
-  Future<Result<List<Character>>> call() => repository.getCharacters();
+  Future<RmResult<RmCharactersPage>> call({String? name, int page = 1}) =>
+      _repository.getAll(name: name, page: page);
 }

@@ -1,12 +1,13 @@
-import 'package:portal_remoto_rick_and_morty_fase_2_ca_bloc/features/characters/domain/repositories/characters_repository.dart';
-
-import '../../../../core/error/result.dart';
+import '../../../../core/core.dart';
 import '../entities/character_entity.dart';
+import '../repositories/characters_repository.dart';
 
-class GetCharacterDetailUseCase {
-  final CharactersRepository repository;
+/// Caso de uso que obtiene el detalle de un personaje por su id
+final class RmGetCharacterDetailUseCase {
+  RmGetCharacterDetailUseCase({required RmCharactersRepository repository})
+    : _repository = repository;
 
-  GetCharacterDetailUseCase({required this.repository});
+  final RmCharactersRepository _repository;
 
-  Future<Result<Character>> call(int id) => repository.getCharacterDetail(id);
+  Future<RmResult<RmCharacterEntity>> call(int id) => _repository.getById(id);
 }
